@@ -4,7 +4,6 @@ from flask import Flask
 import os
 
 from extensions import db
-from routes.watchlist import watchlist_bp
 
 
 def create_app(config=None):
@@ -22,6 +21,7 @@ def create_app(config=None):
 
     from routes.films import films_bp
     from routes.collection import collection_bp
+    from routes.watchlist.watchlist import watchlist_bp
 
     app.register_blueprint(films_bp, url_prefix="/films")
     app.register_blueprint(collection_bp, url_prefix="/collection")
