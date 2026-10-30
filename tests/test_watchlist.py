@@ -72,6 +72,23 @@ def test_add_to_watchlist_duplicate_raises(app, sample_user, sample_film):
         assert count == 1
 
 
+def test_add_to_watchlist_same_film_different_users(app, sample_user, sample_film):
+    """
+    Deduplication is per user. A second user adding a film that's already on
+    someone else's watchlist should succeed, not raise AlreadyOnWatchlistError.
+    """
+    with app.app_context():
+        other_user = User(username="otheruser", email="other@example.com")
+        db.session.add(other_user)
+        db.session.commit()
+
+        add_to_watchlist(user_id=sample_user, film_id=sample_film)
+        add_to_watchlist(user_id=other_user.id, film_id=sample_film)
+
+        count = WatchlistEntry.query.filter_by(film_id=sample_film).count()
+        assert count == 2
+
+
 # ── Nonexistent film ─────────────────────────────────────────────────────────
 
 def test_add_to_watchlist_nonexistent_film_raises(app, sample_user):
