@@ -89,6 +89,47 @@ def test_add_to_watchlist_nonexistent_film_raises(app, sample_user):
         assert WatchlistEntry.query.count() == 0
 
 
+# ── Visibility ───────────────────────────────────────────────────────────────
+
+def test_add_to_watchlist_defaults_to_public(app, sample_user, sample_film):
+    """
+    Entries are public unless the caller says otherwise.
+    """
+    with app.app_context():
+        entry = add_to_watchlist(user_id=sample_user, film_id=sample_film)
+
+        assert entry.public is True
+
+
+def test_add_to_watchlist_private(app, sample_user, sample_film):
+    """
+    Passing public=False should store a private entry.
+    """
+    with app.app_context():
+        entry = add_to_watchlist(
+            user_id=sample_user, film_id=sample_film, public=False
+        )
+
+        in_db = db.session.get(WatchlistEntry, entry.id)
+        assert in_db.public is False
+
+
+def test_add_endpoint_rejects_non_boolean_public(app, sample_user, sample_film):
+    """
+    The string "false" is truthy in Python, so the endpoint should reject it
+    instead of quietly saving a public entry.
+    """
+    client = app.test_client()
+    response = client.post(
+        f"/watchlist/{sample_user}/add",
+        json={"film_id": sample_film, "public": "false"},
+    )
+
+    assert response.status_code == 400
+    with app.app_context():
+        assert WatchlistEntry.query.count() == 0
+
+
 # ── Remove ───────────────────────────────────────────────────────────────────
 
 def test_remove_from_watchlist_deletes_entry(app, sample_user, sample_film):
