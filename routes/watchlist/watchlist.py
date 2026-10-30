@@ -36,5 +36,7 @@ def add_film(user_id):
     try:
         entry = add_to_watchlist(user_id=user_id, film_id=data["film_id"])
         return jsonify(entry.to_dict()), 201
+    except FilmNotFoundError as e:
+        return jsonify({"error": str(e)}), 404
     except AlreadyOnWatchlistError as e:
         return jsonify({"error": str(e)}), 409
