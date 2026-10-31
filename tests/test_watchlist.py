@@ -108,33 +108,33 @@ def test_add_to_watchlist_nonexistent_film_raises(app, sample_user):
 
 # ── Visibility ───────────────────────────────────────────────────────────────
 
-def test_add_to_watchlist_defaults_to_public(app, sample_user, sample_film):
+def test_add_to_watchlist_defaults_to_private(app, sample_user, sample_film):
     """
-    Entries are public unless the caller says otherwise.
+    Entries are private unless the caller says otherwise.
     """
     with app.app_context():
         entry = add_to_watchlist(user_id=sample_user, film_id=sample_film)
 
-        assert entry.public is True
+        assert entry.public is False
 
 
-def test_add_to_watchlist_private(app, sample_user, sample_film):
+def test_add_to_watchlist_public(app, sample_user, sample_film):
     """
-    Passing public=False should store a private entry.
+    Passing public=True should store an entry other users can see.
     """
     with app.app_context():
         entry = add_to_watchlist(
-            user_id=sample_user, film_id=sample_film, public=False
+            user_id=sample_user, film_id=sample_film, public=True
         )
 
         in_db = db.session.get(WatchlistEntry, entry.id)
-        assert in_db.public is False
+        assert in_db.public is True
 
 
 def test_add_endpoint_rejects_non_boolean_public(app, sample_user, sample_film):
     """
     The string "false" is truthy in Python, so the endpoint should reject it
-    instead of quietly saving a public entry.
+    instead of quietly saving a public entry the user meant to keep private.
     """
     client = app.test_client()
     response = client.post(
