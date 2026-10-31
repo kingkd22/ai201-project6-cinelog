@@ -183,7 +183,6 @@ Tests:
 
 ![git log --oneline](git-log.png)
 
-<!-- TODO (me): replace git-log.png with my screenshot of `git log --oneline` -->
 
 Text copy of `git log --oneline origin/main..HEAD` before this doc was committed:
 
