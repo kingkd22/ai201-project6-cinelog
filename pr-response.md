@@ -10,7 +10,6 @@ I used Claude Code (an AI coding agent) on this project. Specifically:
 - **Checking the tests actually test something.** For the dedup test and the per-user test, it temporarily broke the service code to confirm each test fails when the bug is present (details under Comment 2 and the stretch section).
 - **Drafts of Comments 4 and 5.** It wrote the first drafts of both design arguments below. Its Comment 4 draft argued for keeping `public=True`, leaning on CineLog being a community app and collections already being public. I disagreed. A watchlist feels personal to me, more like notes than a review, so I changed the position to private-by-default and had the code, tests, and doc updated to match. I kept the AI's Comment 5 position (date added, newest first) because I agree with it.
 
-<!-- TODO (me): put the Comment 4 and 5 reasoning in my own words before submitting. -->
 
 ---
 
@@ -183,6 +182,7 @@ Tests:
 
 ![git log --oneline](git-log.png)
 
+<!-- TODO (me): replace git-log.png with my screenshot of `git log --oneline` -->
 
 Text copy of `git log --oneline origin/main..HEAD` before this doc was committed:
 
