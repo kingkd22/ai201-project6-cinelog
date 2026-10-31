@@ -29,13 +29,13 @@ def add_film(user_id):
     """
     POST /watchlist/<user_id>/add
 
-    Body: { "film_id": "<uuid>", "public": false }  (public optional, defaults to true)
+    Body: { "film_id": "<uuid>", "public": true }  (public optional, defaults to false)
     """
     data = request.get_json()
     if not data or "film_id" not in data:
         return jsonify({"error": "film_id is required"}), 400
 
-    public = data.get("public", True)
+    public = data.get("public", False)
     if not isinstance(public, bool):
         return jsonify({"error": "public must be true or false"}), 400
 
